@@ -1,0 +1,1 @@
+web: gunicorn cushie_corner_django.wsgi

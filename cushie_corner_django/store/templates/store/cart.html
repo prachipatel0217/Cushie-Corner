@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart – Cushie Corner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<header class="navbar scrolled" id="navbar">
+  <div class="brand">
+    <img src="{% static 'store/images/cushie_corner_logo.jpg' %}" alt="Cushie Corner Logo">
+    <span class="brand-name">Cushie Corner</span>
+  </div>
+  <nav class="menu" id="menu">
+    <a href="{% url 'index' %}#home" class="nav-link">Home</a>
+    <a href="{% url 'index' %}#shop" class="nav-link">Shop</a>
+    <a href="{% url 'cart' %}" class="nav-link cart-link active">
+      Cart <span class="cart-badge" id="cart-badge">{{ cart_count }}</span>
+    </a>
+    <a href="{% url 'index' %}#about" class="nav-link">About</a>
+    <a href="{% url 'index' %}#contact" class="nav-link">Contact</a>
+  </nav>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</header>
+
+<div class="page-hero">
+  <h1>Your Cart</h1>
+  <p>Review your selections</p>
+</div>
+
+<section class="cart-page section">
+  {% if cart_items %}
+  <div class="cart-layout">
+    <div class="cart-items-list" id="cart-items-list">
+      {% for item in cart_items %}
+      <div class="cart-item-row" id="cart-item-{{ item.id }}" data-item-id="{{ item.id }}">
+        <img src="{{ item.product.get_image_url }}" alt="{{ item.product.name }}">
+        <div class="cart-item-details">
+          <h3>{{ item.product.name }}</h3>
+          <p class="price">&#8377;{{ item.product.price }}</p>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="updateQty({{ item.id }}, {{ item.quantity }} - 1)">&#8722;</button>
+            <span class="qty-val" id="qty-{{ item.id }}">{{ item.quantity }}</span>
+            <button class="qty-btn" onclick="updateQty({{ item.id }}, {{ item.quantity }} + 1)">+</button>
+          </div>
+        </div>
+        <div class="cart-item-right">
+          <p class="item-subtotal" id="sub-{{ item.id }}">&#8377;{{ item.subtotal }}</p>
+          <button class="remove-btn" onclick="removeItem({{ item.id }})">Remove</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="cart-summary">
+      <h2>Order Summary</h2>
+      <div class="summary-row"><span>Subtotal</span><span id="cart-total">&#8377;{{ total }}</span></div>
+      <div class="summary-row"><span>Shipping</span><span>Free</span></div>
+      <div class="summary-row total-row"><span>Total</span><span id="cart-total-2">&#8377;{{ total }}</span></div>
+      <a href="{% url 'checkout' %}" class="shop-btn checkout-btn"><span>Proceed to Checkout</span></a>
+      <a href="{% url 'index' %}#shop" class="continue-link">Continue Shopping</a>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty-cart">
+    <div class="empty-cart-icon">&#128722;</div>
+    <h2>Your cart is empty</h2>
+    <p>Looks like you haven't added anything yet.</p>
+    <a href="{% url 'index' %}#shop" class="shop-btn"><span>Start Shopping</span></a>
+  </div>
+  {% endif %}
+</section>
+
+<footer class="footer">
+  <div class="footer-content">
+    <p class="footer-copy">&copy; 2025 Cushie Corner &middot; Crafted with Comfort</p>
+  </div>
+</footer>
+<script src="{% static 'store/js/main.js' %}"></script>
+<script src="{% static 'store/js/cart.js' %}"></script>
+</body>
+</html>
